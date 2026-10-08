@@ -443,32 +443,38 @@ jobs:
           export PATH
           command -v tasks-axi >/dev/null || { echo "::error::tasks-axi is required for the stock Bash regressions"; exit 1; }
 
+          # A failing test already stops this step: each run below is a
+          # command substitution under set -e. What the count guards is a
+          # run that passes while running too little - a FM_TEST_ONLY name
+          # that no longer exists runs nothing and exits 0, and a test that
+          # skips itself under Bash 3.2 prints no ok line. So each run must
+          # report at least as many passing tests as it had when last
+          # reviewed. Adding a test needs no change here; removing one does.
+          require_ok_floor() {
+            floor_label=$1
+            floor_min=$2
+            floor_output=$3
+            floor_count=$(printf '%s\n' "$floor_output" | grep -c '^ok - ' || true)
+            [ "$floor_count" -ge "$floor_min" ] || {
+              echo "::error::$floor_label: $floor_count passing test(s) under stock Bash 3.2, expected at least $floor_min. No test failed, so some did not run: a test or its FM_TEST_ONLY name was removed or renamed, or a test skipped itself under Bash 3.2. If tests were deliberately removed, lower this floor in .github/workflows/ci.yml; otherwise find out why they did not run."
+              exit 1
+            }
+          }
+
           snapshot_output=$(/bin/bash tests/fm-fleet-snapshot-view.test.sh)
           printf '%s\n' "$snapshot_output"
-          snapshot_count=$(printf '%s\n' "$snapshot_output" | grep -c '^ok - ')
-          [ "$snapshot_count" -eq 18 ] || {
-            echo "::error::expected 18 snapshot/fleet-view tests, got $snapshot_count"
-            exit 1
-          }
+          require_ok_floor tests/fm-fleet-snapshot-view.test.sh 20 "$snapshot_output"
 
           bearings_output=$(/bin/bash tests/fm-bearings-snapshot.test.sh)
           printf '%s\n' "$bearings_output"
-          bearings_count=$(printf '%s\n' "$bearings_output" | grep -c '^ok - ')
-          [ "$bearings_count" -eq 60 ] || {
-            echo "::error::expected 60 Bearings tests, got $bearings_count"
-            exit 1
-          }
+          require_ok_floor tests/fm-bearings-snapshot.test.sh 60 "$bearings_output"
 
           # The full public-followup suite is not a stock-bash snapshot; run only
           # the empty-lock register regression under real /bin/bash 3.2.
           pf_output=$(FM_TEST_ONLY=test_first_register_succeeds_with_empty_lock_list_under_bash32 \
             /bin/bash tests/fm-public-followup.test.sh)
           printf '%s\n' "$pf_output"
-          pf_count=$(printf '%s\n' "$pf_output" | grep -c '^ok - ')
-          [ "$pf_count" -eq 1 ] || {
-            echo "::error::expected 1 public-followup bash 3.2 register regression, got $pf_count"
-            exit 1
-          }
+          require_ok_floor tests/fm-public-followup.test.sh 1 "$pf_output"
 
           # Same shape for the watcher's churn-deferral regression: an already-
           # marked churn window expands an empty array that only stock Bash
@@ -476,32 +482,20 @@ jobs:
           churn_output=$(FM_TEST_ONLY=test_turn_ended_churn_existing_marker_absorbed \
             /bin/bash tests/fm-watch-triage.test.sh)
           printf '%s\n' "$churn_output"
-          churn_count=$(printf '%s\n' "$churn_output" | grep -c '^ok - ')
-          [ "$churn_count" -eq 1 ] || {
-            echo "::error::expected 1 watcher churn-deferral bash 3.2 regression, got $churn_count"
-            exit 1
-          }
+          require_ok_floor tests/fm-watch-triage.test.sh 1 "$churn_output"
 
           # The fork-free hot-path helpers must stay byte-identical to the
           # commands they replace under stock Bash 3.2, which lacks the
           # printf %(...)T clock and falls back to date.
           helpers_output=$(/bin/bash tests/fm-fork-free-helpers.test.sh)
           printf '%s\n' "$helpers_output"
-          helpers_count=$(printf '%s\n' "$helpers_output" | grep -c '^ok - ')
-          [ "$helpers_count" -eq 6 ] || {
-            echo "::error::expected 6 fork-free helper bash 3.2 regressions, got $helpers_count"
-            exit 1
-          }
+          require_ok_floor tests/fm-fork-free-helpers.test.sh 6 "$helpers_output"
 
           backend_output=$(FM_TEST_ONLY=test_backend_source_requires_adapter_file \
             FM_TEST_BASH=/bin/bash \
             /bin/bash tests/fm-backend.test.sh)
           printf '%s\n' "$backend_output"
-          backend_count=$(printf '%s\n' "$backend_output" | grep -c '^ok - ')
-          [ "$backend_count" -eq 2 ] || {
-            echo "::error::expected 2 backend adapter-file bash 3.2 regressions, got $backend_count"
-            exit 1
-          }
+          require_ok_floor tests/fm-backend.test.sh 2 "$backend_output"
 
   invariants:
     name: Repo invariants
