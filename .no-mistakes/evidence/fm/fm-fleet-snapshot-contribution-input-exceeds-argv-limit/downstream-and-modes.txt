@@ -1,0 +1,38 @@
+### Downstream: --contribution-input piped into fm-contributions.sh snapshot
+snapshot exit=0
+fm-contributions exit=0
+{
+  "known": 1,
+  "checked": 0,
+  "counts": {
+    "captain": 0,
+    "fleet": 1,
+    "maintainer": 0,
+    "nobody": 0
+  },
+  "unmeasured": 0,
+  "complete": false,
+  "proven_clear": false,
+  "stale_verdicts": 0,
+  "missing_verdicts": 0,
+  "unreadable_records": 0,
+  "valid_until": 900,
+  "captain": [],
+  "captain_omitted": 0
+}
+
+
+### Default --json snapshot with the same oversized backlog
+exit=0
+stdout bytes=1962353
+["backlog","contributions","fm_home","generated","main_inventory","roots","schema","scout_reports","secondmate_current","secondmate_guidance","secondmate_landed","tasks"]
+{"known":1,"checked":0,"counts":{"captain":0,"fleet":1,"maintainer":0,"nobody":0},"unmeasured":0,"complete":false,"proven_clear":false,"stale_verdicts":0,"missing_verdicts":0,"unreadable_records":0,"valid_until":900,"captain":[],"captain_omitted":0}
+
+
+### --secondmate-home-summary with the same backlog
+exit=0
+stdout bytes=16204
+
+### Transport dir cleanup (private TMPDIR=/tmp/ad5c-tmp.x9nDff)
+exit=0
+leftover entries in TMPDIR after --json and --contribution-input runs: 0

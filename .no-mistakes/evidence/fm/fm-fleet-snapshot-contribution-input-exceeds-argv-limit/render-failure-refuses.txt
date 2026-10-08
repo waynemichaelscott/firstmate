@@ -1,0 +1,12 @@
+### Injected failure of the jq call that renders {backlog,tasks}
+-- base b062eb9:
+exit=0 stdout bytes=0
+/tmp/fm-base.gxe1MV/bin/fm-fleet-snapshot.sh: line 1997: /tmp/ad5c-fakebin.hN8tlj/jq: Argument list too long
+-- target ad5c966:
+exit=1 stdout bytes=0
+jq: injected render failure
+fm-fleet-snapshot: contribution input staging failed
+-- target ad5c966, default --json mode:
+exit=1 stdout bytes=0
+jq: injected render failure
+fm-fleet-snapshot: contribution input staging failed

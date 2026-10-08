@@ -1,0 +1,14 @@
+### BEFORE (base b062eb9): bin/fm-fleet-snapshot.sh --contribution-input, backlog.md = 247496 bytes
+exit=0
+stdout bytes=0
+stderr:
+/tmp/fm-base.gxe1MV/bin/fm-fleet-snapshot.sh: line 1997: /usr/bin/jq: Argument list too long
+
+### AFTER (target ad5c966)
+exit=0
+stdout bytes=1956536
+stderr bytes=0
+backlog JSON bytes (compact)=1360290  (MAX_ARG_STRLEN=131072)
+{"records":1540,"tasks":[{"id":"inflight-1","pr":"https://github.com/kunchenguid/firstmate/pull/42"}]}
+{"unresolved_blocker_ids":[],"requires_child_metadata":true,"hold_kind":null,"priority":null,"reported":null,"hold_reason":null,"current_role":"worker","order":1,"pr_url":null,"blocked_by_ids":[],"id":"inflight-1","body_excerpt":null,"hold_set":null,"completion":{"date":null,"verb":null},"merged":null,"hold_bucket":null,"done":null,"body_lines":[],"repo":"firstmate","hold_age_days":36,"state":"in_flight","since":"2026-09-02","links":[],"blocked_reason":null,"local_note":null,"checked":false,"title":"In-flight task 1 on the fleet snapshot path with a realistic descriptive title","structured":true,"kind":"ship","captain_actionable":false,"blocked_by":null,"raw":"- [ ] inflight-1 - In-flight task 1 on the fleet snapshot path with a realistic descriptive title (repo: firstmate) (kind: ship) (since 2026-09-02)","hold_until":null,"report_path":null}
+{"checked":true,"title":"Completed task 300","local_note":null,"kind":"ship","structured":true,"blocked_by":null,"captain_actionable":false,"raw":"- [x] done-300 - Completed task 300 (repo: firstmate) (kind: ship) (done 2026-09-21)","hold_until":null,"report_path":null,"done":"2026-09-21","hold_bucket":null,"merged":null,"hold_age_days":null,"body_lines":[],"repo":"firstmate","links":[],"since":null,"state":"done","blocked_reason":null,"pr_url":null,"blocked_by_ids":[],"completion":{"verb":"done","date":"2026-09-21"},"hold_set":null,"body_excerpt":null,"id":"done-300","reported":null,"priority":null,"hold_kind":null,"unresolved_blocker_ids":[],"requires_child_metadata":false,"hold_reason":null,"order":1540,"current_role":"done"}
